@@ -18,6 +18,7 @@ while True:
     print("===== CHARGEGRID =====\n")
     print("1 - Registrar troca de bateria")
     print("2 - Finalizar recarga de uma bateria")
+    print("3 - Mostrar status")
     print("0 - Sair")
 
     opcao = input("Escolha: ")
@@ -92,5 +93,23 @@ while True:
         except ValueError:
             print("Digite um número válido.\n")
 
-    else:
-        print("Opção inválida.\n")
+    elif opcao == "3":
+        mostrar_status()
+
+    def mostrar_status():
+        print("===== STATUS =====\n")
+
+        print(f"Baterias disponíveis: {baterias_disponiveis}")
+        print(f"Baterias carregando: {len(baterias_carregando)}")
+
+        if baterias_disponiveis <= 1:
+            print("ALERTA: ESTOQUE CRÍTICO\n")
+
+        if len(baterias_carregando) > 0:
+            print("Baterias em recarga:\n")
+
+            for i, carga in enumerate(baterias_carregando, start=1):
+                print(f"Bateria {i}: {carga}% de carga")
+
+        else:
+            print("Opção inválida.\n")
