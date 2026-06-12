@@ -1,5 +1,6 @@
 baterias_disponiveis = 5
 baterias_carregando = []
+historico_valor = []
 
 TARIFA = 0.80
 
@@ -19,6 +20,7 @@ while True:
     print("1 - Registrar troca de bateria")
     print("2 - Finalizar recarga de uma bateria")
     print("3 - Mostrar status")
+    print("4 - Relatório Financerio")
     print("0 - Sair")
 
     opcao = input("Escolha: ")
@@ -53,6 +55,7 @@ while True:
         if pagamento == "1":
             baterias_disponiveis -= 1
             baterias_carregando.append(energia_restante)
+            historico_valor.append(valor)
 
             print("Troca realizada com sucesso!\n")
             mostrar_status()
@@ -96,20 +99,20 @@ while True:
     elif opcao == "3":
         mostrar_status()
 
-    def mostrar_status():
-        print("===== STATUS =====\n")
+    elif opcao == "4":
 
-        print(f"Baterias disponíveis: {baterias_disponiveis}")
-        print(f"Baterias carregando: {len(baterias_carregando)}")
-
-        if baterias_disponiveis <= 1:
-            print("ALERTA: ESTOQUE CRÍTICO\n")
-
-        if len(baterias_carregando) > 0:
-            print("Baterias em recarga:\n")
-
-            for i, carga in enumerate(baterias_carregando, start=1):
-                print(f"Bateria {i}: {carga}% de carga")
+        print("===== RELATÓRIO FINANCEIRO =====\n")
+        if len(historico_valor) == 0:
+            print("Nenhuma troca registrada ainda.")
 
         else:
+            total = sum(historico_valor)
+            quantidade = len(historico_valor)
+            media = total / quantidade
+
+            print(f"Trocas realizadas: {quantidade}")
+            print(f"Receita total: R$ {total:.2f}")
+            print(f"Média por troca: R$ {media:.2f}")
+
+    else:
             print("Opção inválida.\n")
