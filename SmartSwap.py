@@ -2,12 +2,17 @@ baterias_disponiveis = 5
 baterias_carregando = []
 historico_valor = []
 
-TARIFA = 0.80
+capacidade_bateria = 60
+preco_kwh = 2.00
+taxa_servico = 10.00
 
 def mostrar_status():
     print("===== STATUS =====\n")
     print(f"Baterias disponíveis: {baterias_disponiveis}")
     print(f"Baterias carregando: {len(baterias_carregando)}")
+
+    if baterias_disponiveis <= 1:
+        print("ALERTA: ESTOQUE CRÍTICO")
 
     if len(baterias_carregando) > 0:
         print("Baterias em recarga:\n")
@@ -20,7 +25,7 @@ while True:
     print("1 - Registrar troca de bateria")
     print("2 - Finalizar recarga de uma bateria")
     print("3 - Mostrar status")
-    print("4 - Relatório Financerio")
+    print("4 - Relatório financeiro")
     print("0 - Sair")
 
     opcao = input("Escolha: ")
@@ -41,12 +46,24 @@ while True:
             )
         )
 
-        energia_utilizada = 100 - energia_restante
-        valor = energia_utilizada * TARIFA
+        if energia_restante < 0 or energia_restante > 100:
+            print("Valor inválido.\n")
+            continue
+
+        percentual_utilizado = 100 - energia_restante
+        energia_utilizada_kwh = (
+            percentual_utilizado / 100
+        ) * capacidade_bateria
+
+        valor_energia = energia_utilizada_kwh * preco_kwh
+        valor_total = valor_energia + taxa_servico
 
         print("\n===== COBRANÇA =====\n")
-        print(f"Energia utilizada: {energia_utilizada:.1f}%")
-        print(f"Valor a pagar: R$ {valor:.2f}")
+        print(f"Carga restante da bateria: {energia_restante:.1f}%")
+        print(f"Energia utilizada: {energia_utilizada_kwh:.2f} kWh")
+        print(f"Valor da energia: R$ {valor_energia:.2f}")
+        print(f"Taxa de serviço: R$ {taxa_servico:.2f}")
+        print(f"Total a pagar: R$ {valor_total:.2f}")
 
         pagamento = input(
             "\nPagamento realizado?\n1 - Sim\n2 - Não\nEscolha: "
@@ -55,7 +72,7 @@ while True:
         if pagamento == "1":
             baterias_disponiveis -= 1
             baterias_carregando.append(energia_restante)
-            historico_valor.append(valor)
+            historico_valor.append(valor_total)
 
             print("Troca realizada com sucesso!\n")
             mostrar_status()
@@ -89,7 +106,6 @@ while True:
             baterias_disponiveis += 1
 
             print("Bateria recarregada com sucesso!\n")
-            print("Adicionada ao estoque de baterias disponíveis.")
 
             mostrar_status()
 
@@ -115,4 +131,4 @@ while True:
             print(f"Média por troca: R$ {media:.2f}")
 
     else:
-            print("Opção inválida.\n")
+        print("Opção inválida.\n")
