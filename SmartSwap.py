@@ -1,10 +1,16 @@
-baterias_disponiveis = 5
+baterias_disponiveis = 20
 baterias_carregando = []
 historico_valor = []
 
 capacidade_bateria = 60
 preco_kwh = 2.00
 taxa_servico = 10.00
+
+baterias = []
+
+for i in range(1, baterias_disponiveis + 1):
+    baterias.append([i, 100])
+
 
 def mostrar_status():
     print("===== STATUS =====\n")
@@ -14,10 +20,34 @@ def mostrar_status():
     if baterias_disponiveis <= 1:
         print("ALERTA: ESTOQUE CRÍTICO")
 
+
+def consultar_bateria():
+
+    print("\n===== CONSULTAR BATERIA =====")
+
     if len(baterias_carregando) > 0:
-        print("Baterias em recarga:\n")
-        for i, carga in enumerate(baterias_carregando, start=1):
-            print(f"Bateria {i}: {carga}% de carga")
+        print("\nBaterias em recarga:\n")
+
+        for bateria in baterias_carregando:
+            print(f"Bateria {bateria[0]}: {bateria[1]}% de carga")
+
+    try:
+        escolha = int(input("\nDigite o número da bateria: "))
+
+        if escolha < 1 or escolha > len(baterias):
+            print("Bateria não encontrada.")
+            return
+
+        for bateria in baterias:
+
+            if bateria[0] == escolha:
+                print(f"\nBateria {bateria[0]}")
+                print(f"Carga: {bateria[1]}%")
+                return
+
+    except ValueError:
+        print("Digite um número válido.")
+
 
 while True:
 
@@ -70,8 +100,17 @@ while True:
         )
 
         if pagamento == "1":
+
+            for bateria in baterias:
+
+                if bateria not in baterias_carregando:
+
+                    bateria[1] = energia_restante
+                    baterias_carregando.append(bateria)
+
+                    break
+
             baterias_disponiveis -= 1
-            baterias_carregando.append(energia_restante)
             historico_valor.append(valor_total)
 
             print("Troca realizada com sucesso!\n")
@@ -88,21 +127,31 @@ while True:
 
         print("===== BATERIAS EM CARREGAMENTO =====\n")
 
-        for i, carga in enumerate(baterias_carregando, start=1):
-            print(f"{i} - Bateria com {carga}% de carga")
+        for bateria in baterias_carregando:
+            print(f"{bateria[0]} - Bateria com {bateria[1]}% de carga")
 
         try:
+
             escolha = int(
                 input(
                     "Digite o número da bateria que terminou de carregar: \n"
                 )
             )
 
-            if escolha < 1 or escolha > len(baterias_carregando):
+            bateria_encontrada = None
+
+            for bateria in baterias_carregando:
+
+                if bateria[0] == escolha:
+                    bateria_encontrada = bateria
+                    break
+
+            if bateria_encontrada is None:
                 print("Número inválido.\n")
                 continue
 
-            baterias_carregando.pop(escolha - 1)
+            bateria_encontrada[1] = 100
+            baterias_carregando.remove(bateria_encontrada)
             baterias_disponiveis += 1
 
             print("Bateria recarregada com sucesso!\n")
@@ -114,10 +163,12 @@ while True:
 
     elif opcao == "3":
         mostrar_status()
+        consultar_bateria()
 
     elif opcao == "4":
 
         print("===== RELATÓRIO FINANCEIRO =====\n")
+
         if len(historico_valor) == 0:
             print("Nenhuma troca registrada ainda.")
 
