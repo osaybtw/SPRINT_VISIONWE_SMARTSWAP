@@ -1,3 +1,20 @@
+import tkinter as tk
+
+janela = tk.Tk()
+
+janela.title("ChargeGrid")
+janela.geometry("800x600")
+
+titulo = tk.Label(
+    janela,
+    text="CHARGEGRID",
+    font=("Arial", 24)
+)
+
+titulo.pack(pady=30)
+
+janela.mainloop()
+
 baterias_disponiveis = 20
 baterias_carregando = []
 historico_valor = []
