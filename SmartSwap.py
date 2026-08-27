@@ -59,6 +59,15 @@ def registrar_troca(energia_restante):
             bateria[1] = energia_restante
             baterias_carregando.append(bateria)
 
-        baterias_disponiveis -= 1
+            baterias_disponiveis -= 1
 
-        break
+            break
+
+        return {
+    "numero_da_bateria": bateria[0],
+    "carga_restante": energia_restante,
+    "energia_utilizada": energia_utilizada_kwh,
+    "valor_energia": valor_energia,
+    "taxa_servico": taxa_servico,
+    "valor_total": valor_total
+}
