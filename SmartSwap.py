@@ -14,7 +14,7 @@ lista_baterias = []
 for i in range(1, total_baterias + 1):
     lista_baterias.append([i, 100])
 
-
+# Mostrar status das baterias
 def mostrar_status():
     return {
         "total_baterias": total_baterias,
@@ -24,6 +24,7 @@ def mostrar_status():
     }
 
 
+# Buscar alguma bateria específica
 def consultar_bateria(escolha):
 
     if escolha < 1 or escolha > len(lista_baterias):
@@ -37,6 +38,7 @@ def consultar_bateria(escolha):
     return None
 
 
+# Função para registrar a troca de baterias
 def registrar_troca(energia_restante):
 
     global baterias_disponiveis
@@ -56,20 +58,43 @@ def registrar_troca(energia_restante):
 
     for bateria in lista_baterias:
 
-        if bateria[1] == 100:
+        if bateria[1] == 100 and bateria not in baterias_carregando:
 
             bateria[1] = energia_restante
             baterias_carregando.append(bateria)
 
             baterias_disponiveis -= 1
 
-        return {
-            "numero_da_bateria": bateria[0],
-            "carga_restante": energia_restante,
-            "energia_utilizada": energia_utilizada_kwh,
-            "valor_energia": valor_energia,
-            "taxa_servico": taxa_servico,
-            "valor_total": valor_total
-        }
+            return {
+                "numero_da_bateria": bateria[0],
+                "carga_restante": energia_restante,
+                "energia_utilizada": energia_utilizada_kwh,
+                "valor_energia": valor_energia,
+                "taxa_servico": taxa_servico,
+                "valor_total": valor_total
+            }
 
     return None
+
+
+# Função para recarregar a bateria
+def finalizar_recarga(escolha):
+
+    global baterias_disponiveis
+
+    bateria_encontrada = None
+
+    for bateria in baterias_carregando:
+
+        if bateria[0] == escolha:
+            bateria_encontrada = bateria
+            break
+
+    if bateria_encontrada is None:
+        return None
+
+    bateria_encontrada[1] = 100
+    baterias_carregando.remove(bateria_encontrada)
+    baterias_disponiveis += 1
+
+    return bateria_encontrada

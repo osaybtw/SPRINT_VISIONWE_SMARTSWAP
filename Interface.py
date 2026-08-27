@@ -7,7 +7,7 @@ import SmartSwap
 janela = tk.Tk()
 
 janela.title("SmartSwap")
-janela.geometry("800x600")
+janela.geometry("1000x750")
 
 # Caixa do título
 
@@ -49,6 +49,16 @@ entrada_energia = tk.Entry(
 
 entrada_energia.pack(pady=10)
 
+# Função para atualizar o status depois da troca
+
+def atualizar_status():
+    status = SmartSwap.mostrar_status()
+
+    label_status_baterias.config(
+        text=f"Baterias totais: {status['total_baterias']}\n"
+             f"Baterias disponíveis: {status['baterias_disponiveis']}\n"
+             f"Baterias carregando: {status['baterias_carregando']}"
+    )
 
 # Função executada quando o botão for clicado
 def registrar_troca_interface():
@@ -67,6 +77,9 @@ def registrar_troca_interface():
                  f"Taxa de serviço: R$ {resultado_troca['taxa_servico']:.2f}\n"
                  f"Total: R$ {resultado_troca['valor_total']:.2f}"
         )
+
+        atualizar_status()
+
     else:
 
         label_resultado_troca.config(
@@ -93,5 +106,59 @@ label_resultado_troca = tk.Label(
 )
 
 label_resultado_troca.pack(pady=20)
+
+# Caixa para digitar o número da bateria que terminou de carregar
+
+label_entrada_recarga = tk.Label(
+    janela,
+    text="Número da bateria que terminou de carregar:",
+    font=("Arial", 14)
+)
+
+label_entrada_recarga.pack(pady=5)
+
+
+entrada_recarga = tk.Entry(
+    janela,
+    font=("Arial", 16)
+)
+
+entrada_recarga.pack(pady=10)
+
+
+# Função executada quando finalizar a recarga
+
+def finalizar_recarga_interface():
+
+    escolha = int(entrada_recarga.get())
+
+    resultado_recarga = SmartSwap.finalizar_recarga(escolha)
+
+    if resultado_recarga is not None:
+
+        label_resultado_troca.config(
+            text=f"Bateria {resultado_recarga[0]} recarregada!\n"
+                 f"Carga atual: {resultado_recarga[1]}%"
+        )
+
+        atualizar_status()
+
+    else:
+
+        label_resultado_troca.config(
+            text="Bateria não encontrada ou não está em recarga."
+        )
+
+
+# Botão para finalizar a recarga
+
+botao_recarga = tk.Button(
+    janela,
+    text="Finalizar recarga",
+    font=("Arial", 14),
+    command=finalizar_recarga_interface
+)
+
+botao_recarga.pack(pady=10)
 
 janela.mainloop()
