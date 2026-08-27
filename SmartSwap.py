@@ -39,6 +39,8 @@ def consultar_bateria(escolha):
 
 def registrar_troca(energia_restante):
 
+    global baterias_disponiveis
+
     if baterias_disponiveis <= 0:
         return None
 
@@ -61,13 +63,13 @@ def registrar_troca(energia_restante):
 
             baterias_disponiveis -= 1
 
-            break
-
         return {
-    "numero_da_bateria": bateria[0],
-    "carga_restante": energia_restante,
-    "energia_utilizada": energia_utilizada_kwh,
-    "valor_energia": valor_energia,
-    "taxa_servico": taxa_servico,
-    "valor_total": valor_total
-}
+            "numero_da_bateria": bateria[0],
+            "carga_restante": energia_restante,
+            "energia_utilizada": energia_utilizada_kwh,
+            "valor_energia": valor_energia,
+            "taxa_servico": taxa_servico,
+            "valor_total": valor_total
+        }
+
+    return None
