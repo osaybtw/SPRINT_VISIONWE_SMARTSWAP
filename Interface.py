@@ -2,7 +2,7 @@
 import tkinter as tk
 import SmartSwap
 
-# Janela da interface
+# Janela do programa
 
 janela = tk.Tk()
 
@@ -19,7 +19,7 @@ label_titulo = tk.Label(
 
 label_titulo.pack(pady=30)
 
-# Area do conteudo
+# Área do conteúdo
 frame_conteudo = tk.Frame(janela)
 frame_conteudo.pack(pady=20)
 
@@ -79,12 +79,34 @@ entrada_recarga = tk.Entry(
     font=("Arial", 16)
 )
 
+# Consulta de bateria específica
+label_entrada_bateria = tk.Label(
+    frame_conteudo,
+    text="Número da bateria:",
+    font=("Arial", 14)
+)
+
+entrada_bateria = tk.Entry(
+    frame_conteudo,
+    font=("Arial", 16)
+)
+
+label_resultado_bateria = tk.Label(
+    frame_conteudo,
+    text="",
+    font=("Arial", 14)
+)
 
 # Função para mostrar tela de troca
 def mostrar_tela_troca():
     label_entrada_recarga.pack_forget()
     entrada_recarga.pack_forget()
     botao_recarga.pack_forget()
+
+    label_entrada_bateria.pack_forget()
+    entrada_bateria.pack_forget()
+    botao_consultar_bateria.pack_forget()
+    label_resultado_bateria.pack_forget()
 
     label_entrada_energia.pack(pady=5)
     entrada_energia.pack(pady=10)
@@ -98,12 +120,37 @@ def mostrar_tela_recarga():
     entrada_energia.pack_forget()
     botao_troca.pack_forget()
 
+    label_entrada_bateria.pack_forget()
+    entrada_bateria.pack_forget()
+    botao_consultar_bateria.pack_forget()
+    label_resultado_bateria.pack_forget()
+
     label_entrada_recarga.pack(pady=5)
     entrada_recarga.pack(pady=10)
     botao_recarga.pack(pady=10)
     label_resultado_troca.pack(pady=20)
 
-# Função executada quando o botão for clicado
+# Função para mostrar tela de consulta
+def mostrar_tela_consulta():
+
+    # Esconde os elementos da troca
+    label_entrada_energia.pack_forget()
+    entrada_energia.pack_forget()
+    botao_troca.pack_forget()
+
+    # Esconde os elementos da recarga
+    label_entrada_recarga.pack_forget()
+    entrada_recarga.pack_forget()
+    botao_recarga.pack_forget()
+    label_resultado_troca.pack_forget()
+
+    # Mostra os elementos da consulta
+    label_entrada_bateria.pack(pady=5)
+    entrada_bateria.pack(pady=10)
+    botao_consultar_bateria.pack(pady=10)
+    label_resultado_bateria.pack(pady=20)
+
+# Função executada quando o botão de troca for clicado
 def registrar_troca_interface():
 
     try:
@@ -161,6 +208,47 @@ botao_troca = tk.Button(
 )
 
 
+# Função para consultar bateria
+def consultar_bateria_interface():
+
+    try:
+
+        escolha = int(
+            entrada_bateria.get()
+        )
+
+    except ValueError:
+
+        label_resultado_bateria.config(
+            text="Digite um número de bateria válido."
+        )
+
+        return
+
+    bateria = SmartSwap.consultar_bateria(escolha)
+
+    if bateria is None:
+
+        label_resultado_bateria.config(
+            text="Bateria não encontrada."
+        )
+
+        return
+
+    if bateria[1] == 100:
+
+        status_bateria = "Disponível"
+
+    else:
+
+        status_bateria = "Carregando"
+
+    label_resultado_bateria.config(
+        text=f"Bateria {bateria[0]}\n"
+             f"Carga: {bateria[1]}%\n"
+             f"Status: {status_bateria}"
+    )
+
 # Função executada quando finalizar a recarga
 def finalizar_recarga_interface():
 
@@ -198,8 +286,15 @@ def finalizar_recarga_interface():
         )
 
 
-# Botão para finalizar a recarga
+# Botão para consultar bateria
+botao_consultar_bateria = tk.Button(
+    frame_conteudo,
+    text="Consultar bateria",
+    font=("Arial", 14),
+    command=consultar_bateria_interface
+)
 
+# Botão para finalizar a recarga
 botao_recarga = tk.Button(
     frame_conteudo,
     text="Finalizar recarga",
@@ -227,15 +322,14 @@ botao_recarregar = tk.Button(
 
 botao_recarregar.pack(pady=5)
 
-
-botao_status = tk.Button(
+botao_consultar = tk.Button(
     janela,
-    text="Status das baterias",
-    font=("Arial", 14)
+    text="Consultar baterias",
+    font=("Arial", 14),
+    command=mostrar_tela_consulta
 )
 
-botao_status.pack(pady=5)
-
+botao_consultar.pack(pady=5)
 
 botao_financeiro = tk.Button(
     janela,
