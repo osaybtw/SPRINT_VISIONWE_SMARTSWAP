@@ -65,6 +65,14 @@ def registrar_troca(energia_restante):
 
             baterias_disponiveis -= 1
 
+            historico_valor.append({
+                "bateria": bateria[0],
+                "energia_utilizada": energia_utilizada_kwh,
+                "valor_energia": valor_energia,
+                "taxa_servico": taxa_servico,
+                "valor_total": valor_total
+            })
+            
             return {
                 "numero_da_bateria": bateria[0],
                 "carga_restante": energia_restante,
@@ -75,6 +83,26 @@ def registrar_troca(energia_restante):
             }
 
     return None
+
+def mostrar_relatorio_financeiro():
+
+    quantidade = len(historico_valor)
+
+    total = 0
+
+    for troca in historico_valor:
+        total += troca["valor_total"]
+
+    if quantidade > 0:
+        media = total / quantidade
+    else:
+        media = 0
+
+    return {
+        "quantidade": quantidade,
+        "total": total,
+        "media": media
+    }
 
 
 # Função para recarregar a bateria

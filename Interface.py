@@ -97,8 +97,18 @@ label_resultado_bateria = tk.Label(
     font=("Arial", 14)
 )
 
+# Resultado do relatório financeiro
+label_resultado_financeiro = tk.Label(
+    frame_conteudo,
+    text="",
+    font=("Arial", 14)
+)
+
 # Função para mostrar tela de troca
 def mostrar_tela_troca():
+
+    label_resultado_financeiro.pack_forget()
+
     label_entrada_recarga.pack_forget()
     entrada_recarga.pack_forget()
     botao_recarga.pack_forget()
@@ -116,6 +126,8 @@ def mostrar_tela_troca():
 # Função para mostrar tela de recarga
 def mostrar_tela_recarga():
 
+    label_resultado_financeiro.pack_forget()
+
     label_entrada_energia.pack_forget()
     entrada_energia.pack_forget()
     botao_troca.pack_forget()
@@ -132,6 +144,8 @@ def mostrar_tela_recarga():
 
 # Função para mostrar tela de consulta
 def mostrar_tela_consulta():
+
+    label_resultado_financeiro.pack_forget()
 
     # Esconde os elementos da troca
     label_entrada_energia.pack_forget()
@@ -249,6 +263,39 @@ def consultar_bateria_interface():
              f"Status: {status_bateria}"
     )
 
+# Função para mostrar o relatório financeiro
+def mostrar_tela_financeiro():
+
+    # Esconde os elementos da troca
+    label_entrada_energia.pack_forget()
+    entrada_energia.pack_forget()
+    botao_troca.pack_forget()
+    label_resultado_troca.pack_forget()
+
+    # Esconde os elementos da recarga
+    label_entrada_recarga.pack_forget()
+    entrada_recarga.pack_forget()
+    botao_recarga.pack_forget()
+
+    # Esconde os elementos da consulta
+    label_entrada_bateria.pack_forget()
+    entrada_bateria.pack_forget()
+    botao_consultar_bateria.pack_forget()
+    label_resultado_bateria.pack_forget()
+
+    # Busca os dados do relatório
+    relatorio = SmartSwap.mostrar_relatorio_financeiro()
+
+    # Mostra o relatório
+    label_resultado_financeiro.pack(pady=20)
+
+    label_resultado_financeiro.config(
+    text=f"RELATÓRIO FINANCEIRO\n\n"
+         f"Trocas realizadas: {relatorio['quantidade']}\n"
+         f"Receita total: R$ {relatorio['total']:.2f}\n"
+         f"Média por troca: R$ {relatorio['media']:.2f}"
+    )
+
 # Função executada quando finalizar a recarga
 def finalizar_recarga_interface():
 
@@ -334,7 +381,8 @@ botao_consultar.pack(pady=5)
 botao_financeiro = tk.Button(
     janela,
     text="Relatorio financeiro",
-    font=("Arial", 14)
+    font=("Arial", 14),
+    command=mostrar_tela_financeiro
 )
 
 botao_financeiro.pack(pady=5)
